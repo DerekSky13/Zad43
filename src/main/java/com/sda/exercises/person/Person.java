@@ -1,17 +1,22 @@
 package com.sda.exercises.person;
 
 import com.sda.exercises.animals.Animal;
+import com.sda.exercises.animals.Dog;
 import com.sda.exercises.exceptions.FullOfFoodException;
 import com.sda.exercises.exceptions.NoFoodException;
 import com.sda.exercises.food.Food;
 import com.sda.exercises.food.StockFood;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
-public class Person {
+public class Person implements Runnable{
+
+    private Random random = new Random();
+
+    public List<Animal> getAnimals() {
+        return animals;
+    }
+
     private List<Animal> animals = new ArrayList<>();
     private List<StockFood> stockFoods = new ArrayList<>();
 
@@ -22,7 +27,21 @@ public class Person {
             stockFoods.add(new StockFood(food));
         }
     }
+    @Override
+    public void run() {
+        this.buyAnimal(new Dog());
+        int milis = random.nextInt(3000);
+        for (int i = 0; i < 10; i++) {
+            System.out.println(i);
+            this.feedAnimals();
+            try {
+                Thread.sleep(milis);
+            }catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
+    }
     private void buyFood(Food food) {
         System.out.println("Kupuje " + food.name());
         Optional<StockFood> stockFoodOptional =
@@ -65,4 +84,6 @@ public class Person {
         stockFoodOptional.decreaseFood();
         animal.eat(food);
     }
+
+
 }
